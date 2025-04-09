@@ -1,34 +1,56 @@
 import { useState, useCallback, useEffect } from "react";
-
-export interface Message {
-  content: Array<{
-    type: string;
-    text: string;
-  }>;
-}
+import { Interview, InterviewMessage } from "@/models/interview";
 
 export function useInterview() {
   const [started, setStarted] = useState(false);
   const [completed, setCompleted] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<InterviewMessage[]>([]);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   // Auto-start the interview when the hook is initialized
   useEffect(() => {
-    // Only start if not already started and not completed
     if (!started && !completed) {
       setStarted(true);
+      setStartTime(Date.now());
     }
-  }, []); // Empty dependency array to run only once on mount
+  }, []);
 
-  const addMessage = useCallback((message: Message) => {
+  const addMessage = useCallback((message: InterviewMessage) => {
     setMessages((prev) => [...prev, message]);
   }, []);
 
-  const finishInterview = useCallback(() => {
+  const finishInterview = useCallback(async () => {
     setCompleted(true);
     setStarted(false);
-  }, []);
+
+    // Calculate duration
+    const duration = startTime
+      ? Math.floor((Date.now() - startTime) / 1000)
+      : 0;
+
+    // Create interview object
+    const interview: Interview = {
+      id: crypto.randomUUID(),
+      date: new Date().toISOString(),
+      messages,
+      audioUrl,
+      duration,
+    };
+
+    // Save interview
+    try {
+      await fetch("/api/interviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(interview),
+      });
+    } catch (error) {
+      console.error("Failed to save interview:", error);
+    }
+  }, [messages, audioUrl, startTime]);
 
   const setInterviewAudio = useCallback((url: string) => {
     setAudioUrl(url);
@@ -39,6 +61,7 @@ export function useInterview() {
     setAudioUrl(null);
     setCompleted(false);
     setStarted(true);
+    setStartTime(Date.now());
   }, []);
 
   return {

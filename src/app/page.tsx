@@ -33,6 +33,10 @@ export default function Home() {
     router.push("/interview");
   };
 
+  const viewHistory = () => {
+    router.push("/history");
+  };
+
   return (
     <div className="min-h-screen bg-[#202124] relative overflow-hidden">
       {/* Decorative elements */}
@@ -55,8 +59,11 @@ export default function Home() {
               Our advanced AI creates a natural conversation flow while
               providing meaningful insights into your interview performance.
             </p>
-            <div className="mt-8">
+            <div className="mt-8 flex gap-4">
               <Button onClick={startInterview}>Start Interview</Button>
+              <Button variant="secondary" onClick={viewHistory}>
+                View History
+              </Button>
             </div>
           </div>
 
@@ -105,11 +112,7 @@ export default function Home() {
             </span>
           </h2>
           <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-            <div className="inline-flex rounded-md shadow">
-              <Button variant="white" onClick={startInterview}>
-                Get Started
-              </Button>
-            </div>
+            <Button onClick={startInterview}>Get Started</Button>
           </div>
         </div>
       </div>
