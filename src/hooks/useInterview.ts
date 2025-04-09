@@ -1,10 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
-import { Interview, InterviewMessage } from "@/models/interview";
+import { Message } from "@/models/message";
+import { Interview } from "@/models/interview";
 
 export function useInterview() {
   const [started, setStarted] = useState(false);
   const [completed, setCompleted] = useState(false);
-  const [messages, setMessages] = useState<InterviewMessage[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [startTime, setStartTime] = useState<number | null>(null);
 
@@ -14,9 +15,10 @@ export function useInterview() {
       setStarted(true);
       setStartTime(Date.now());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const addMessage = useCallback((message: InterviewMessage) => {
+  const addMessage = useCallback((message: Message) => {
     setMessages((prev) => [...prev, message]);
   }, []);
 

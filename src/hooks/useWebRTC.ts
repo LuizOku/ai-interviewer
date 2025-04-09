@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Message } from "./useInterview";
+import { Message } from "@/models/message";
 
 interface ResponseData {
   type: string;
