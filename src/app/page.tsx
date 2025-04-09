@@ -7,19 +7,19 @@ import { FeatureCard } from "@/components/FeatureCard";
 
 const features = [
   {
-    emoji: "🎤",
+    icon: "mic",
     title: "Real-time Conversation",
     description:
       "Engage in natural, flowing conversations with our advanced AI interviewer that adapts to your responses.",
   },
   {
-    emoji: "🎯",
+    icon: "work",
     title: "Professional Experience",
     description:
       "Get a realistic interview experience with our AI that simulates real-world scenarios.",
   },
   {
-    emoji: "📱",
+    icon: "record_voice_over",
     title: "Record & Review",
     description:
       "Access recordings of your interviews to analyze your performance and track improvement.",
@@ -87,7 +87,7 @@ export default function Home() {
           {features.map((feature) => (
             <FeatureCard
               key={feature.title}
-              emoji={feature.emoji}
+              icon={feature.icon}
               title={feature.title}
               description={feature.description}
             />
