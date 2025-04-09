@@ -1,43 +1,82 @@
 # AI Interviewer
 
-An AI-powered interview experience built with Next.js and OpenAI's API.
+A Next.js application that simulates real job interviews using AI. Practice your interview skills with an AI interviewer that provides real-time feedback and natural conversation flow.
+
+## Demo
+
+🚀 **[Live Demo](https://ai-interviewer.vercel.app/)**
 
 ## Features
 
-- Real-time audio recording and transcription
-- AI-powered interview questions and responses
-- Modern, user-friendly interface
-- Responsive design
+- 🎤 Real-time audio recording and transcription
+- 🤖 AI-powered interview questions and responses
+- 💬 Natural conversation flow with context-aware follow-ups
+- 📱 Responsive design for all devices
 
-## Getting Started
+## Tech Stack
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-## How to Use
-
-1. Click the "Start Recording" button to begin the interview
-2. Speak your answers when prompted
-3. Click "Stop Recording" when you're done speaking
-4. The AI will transcribe your response and ask the next question
-5. Continue until all questions are answered
-
-## Technologies Used
-
-- Next.js
-- React
+- Next.js 15
+- TypeScript
 - OpenAI API
 - Tailwind CSS
-- TypeScript
+- WebRTC for audio handling
 
-## Note
+## Quick Start
 
-This application requires a modern browser with microphone access. Make sure to grant microphone permissions when prompted.
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/ai-interviewer.git
+cd ai-interviewer
+```
+
+2. Install dependencies:
+```bash
+yarn install
+```
+
+3. Create a `.env.local` file:
+```env
+OPENAI_API_KEY=your_openai_api_key
+```
+
+4. Start the development server:
+```bash
+yarn dev
+```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Project Structure
+
+```
+src/
+├── app/                    # Next.js app directory
+│   ├── api/               # API routes
+│   │   ├── interviews/    # Interview-related endpoints
+│   │   └── session/       # Session management endpoints
+│   ├── history/           # Interview history page
+│   ├── interview/         # Interview flow page
+│   ├── page.tsx           # Home page
+│   └── layout.tsx         # Root layout
+├── components/            # UI components
+├── hooks/                # Custom React hooks
+├── models/              # TypeScript interfaces
+└── __tests__/          # Test files
+```
+
+## Development
+
+- Run tests: `yarn test`
+- Lint code: `yarn lint`
+- Build for production: `yarn build`
+
+## Requirements
+
+- Node.js 18+
+- Modern browser with microphone access
+- OpenAI API key
+
+## Contributing
+
+Feel free to open issues and pull requests. All contributions are welcome!
+

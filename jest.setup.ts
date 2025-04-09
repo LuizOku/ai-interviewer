@@ -1,12 +1,22 @@
 // Configure testing library
 import "@testing-library/jest-dom";
+import { jest, afterEach } from "@jest/globals";
 import React from "react";
 
 // Mock next/navigation
+const mockRouter = {
+  push: jest.fn(),
+  replace: jest.fn(),
+  back: jest.fn(),
+  forward: jest.fn(),
+  refresh: jest.fn(),
+  prefetch: jest.fn(),
+};
+
 jest.mock("next/navigation", () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-  }),
+  useRouter: () => mockRouter,
+  usePathname: () => "/",
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 // Mock next/image
@@ -22,8 +32,16 @@ jest.mock("next/image", () => ({
 }));
 
 // Mock fetch
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve([]),
-  })
-) as jest.Mock;
+const mockResponse = {
+  json: () => Promise.resolve([]),
+  ok: true,
+  status: 200,
+  statusText: "OK",
+} as Response;
+
+(global.fetch as jest.Mock) = jest.fn(() => Promise.resolve(mockResponse));
+
+// Clear all mocks after each test
+afterEach(() => {
+  jest.clearAllMocks();
+});
