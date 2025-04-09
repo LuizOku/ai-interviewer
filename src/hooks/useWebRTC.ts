@@ -65,6 +65,15 @@ export function useWebRTC(
       ).then((r) => r.text());
 
       await pc.setRemoteDescription({ type: "answer", sdp });
+
+      // Make AI start speaking immediately when connection is established
+      dc.onopen = () => {
+        dc.send(
+          JSON.stringify({
+            type: "response.create",
+          })
+        );
+      };
     }
 
     initWebRTC();
