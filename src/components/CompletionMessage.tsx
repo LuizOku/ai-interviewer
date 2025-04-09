@@ -5,12 +5,16 @@ interface CompletionMessageProps {
   audioUrl: string | null;
   onRestart: () => void;
   onHome: () => void;
+  onSave: () => void;
+  isSaving?: boolean;
 }
 
 export function CompletionMessage({
   audioUrl,
   onRestart,
   onHome,
+  onSave,
+  isSaving = false,
 }: CompletionMessageProps) {
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[100] p-2 sm:p-4">
@@ -22,7 +26,8 @@ export function CompletionMessage({
             </h2>
             <p className="text-sm sm:text-base text-gray-300">
               Thank you for participating in this AI interview session. You can
-              listen to the recording below.
+              listen to your recording below. Choose to save this interview,
+              retry for a new attempt, or return to the home page.
             </p>
           </div>
 
@@ -32,11 +37,19 @@ export function CompletionMessage({
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
-            <Button onClick={onRestart} variant="primary" className="flex-1">
-              New Interview
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-2">
+            <Button
+              onClick={onSave}
+              variant="primary"
+              className="col-span-2"
+              disabled={!audioUrl || isSaving}
+            >
+              {isSaving ? "Saving..." : "Save Interview"}
             </Button>
-            <Button onClick={onHome} variant="secondary" className="flex-1">
+            <Button onClick={onRestart} variant="secondary">
+              Retry
+            </Button>
+            <Button onClick={onHome} variant="white">
               Home
             </Button>
           </div>

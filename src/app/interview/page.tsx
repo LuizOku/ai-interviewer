@@ -13,12 +13,15 @@ export default function InterviewPage() {
     started,
     completed,
     audioUrl,
-    addMessage,
-    finishInterview,
+    isSaving,
+    completeInterview,
+    saveInterview,
     setInterviewAudio,
     restartInterview,
   } = useInterview();
-  useWebRTC(started, addMessage, setInterviewAudio);
+  const { connectionState } = useWebRTC(started, setInterviewAudio);
+  const isConnecting =
+    connectionState === "new" || connectionState === "connecting";
 
   return (
     <div className="min-h-screen bg-[#202124] text-white relative overflow-hidden">
@@ -31,7 +34,7 @@ export default function InterviewPage() {
         <Header
           started={started}
           completed={completed}
-          onFinish={finishInterview}
+          onFinish={completeInterview}
           onBackHome={() => router.push("/")}
         />
 
@@ -39,14 +42,16 @@ export default function InterviewPage() {
           <div className="flex-1 p-4 sm:p-8 flex items-center justify-center">
             {!completed ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 w-full max-w-5xl">
-                <ParticipantBox type="user" />
-                <ParticipantBox type="ai" />
+                <ParticipantBox type="user" isConnecting={isConnecting} />
+                <ParticipantBox type="ai" isConnecting={isConnecting} />
               </div>
             ) : (
               <CompletionMessage
                 audioUrl={audioUrl}
                 onRestart={restartInterview}
                 onHome={() => router.push("/")}
+                onSave={() => saveInterview(() => router.push("/history"))}
+                isSaving={isSaving}
               />
             )}
           </div>

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Message } from "@/models/message";
 
 interface ResponseData {
   type: string;
@@ -15,7 +14,6 @@ interface ResponseData {
 
 export function useWebRTC(
   started: boolean,
-  addMessage: (message: Message) => void,
   setInterviewAudio?: (url: string) => void
 ) {
   const dataChannelRef = useRef<RTCDataChannel | null>(null);
@@ -144,9 +142,6 @@ export function useWebRTC(
 
             if (data.type === "response.done") {
               console.log("Complete response:", data.response);
-              if (data.response.output?.[0]) {
-                addMessage(data.response.output[0]);
-              }
               messageBufferRef.current = "";
             }
           } catch (error) {
@@ -201,7 +196,7 @@ export function useWebRTC(
     }
 
     return cleanup;
-  }, [started, addMessage, setInterviewAudio]);
+  }, [started, setInterviewAudio]);
 
   return {
     dataChannelRef,

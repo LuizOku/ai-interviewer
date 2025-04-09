@@ -1,8 +1,12 @@
 interface ParticipantBoxProps {
   type: "user" | "ai";
+  isConnecting?: boolean;
 }
 
-export function ParticipantBox({ type }: ParticipantBoxProps) {
+export function ParticipantBox({
+  type,
+  isConnecting = false,
+}: ParticipantBoxProps) {
   return (
     <div className="bg-gray-900/40 backdrop-blur-xl rounded-3xl border border-gray-700/50 shadow-2xl p-8">
       <div className="flex items-center gap-4">
@@ -16,7 +20,11 @@ export function ParticipantBox({ type }: ParticipantBoxProps) {
             {type === "user" ? "You" : "AI Interviewer"}
           </h2>
           <p className="text-gray-400">
-            {type === "user" ? "Interviewee" : "Assistant"}
+            {isConnecting
+              ? "Connecting..."
+              : type === "user"
+              ? "Interviewee"
+              : "Assistant"}
           </p>
         </div>
       </div>
