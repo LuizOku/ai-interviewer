@@ -47,7 +47,6 @@ export async function POST(request: Request) {
 
     // Upload to GridFS
     const audioId = await uploadAudio(buffer, audioFile.name);
-    console.log("Uploaded audio with ID:", audioId);
 
     // Create interview record
     const interview = await db.collection("interviews").insertOne({
@@ -56,7 +55,6 @@ export async function POST(request: Request) {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    console.log("Created interview:", interview);
 
     return NextResponse.json(interview);
   } catch (error) {

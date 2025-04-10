@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { toast } from "react-hot-toast";
 
 export function useInterview() {
   const [started, setStarted] = useState(false);
@@ -21,7 +22,7 @@ export function useInterview() {
   const saveInterview = useCallback(
     async (onSaved?: () => void) => {
       if (!audioUrl) {
-        console.warn("Cannot save interview: audioUrl is not available");
+        toast.error("Please complete your interview before saving.");
         return;
       }
 
@@ -45,10 +46,12 @@ export function useInterview() {
           throw new Error("Failed to save interview");
         }
 
+        toast.success("Your interview has been saved successfully!");
         // Call the onSaved callback if provided
         onSaved?.();
       } catch (error) {
         console.error("Failed to save interview:", error);
+        toast.error("We couldn't save your interview. Please try again.");
       } finally {
         setIsSaving(false);
       }

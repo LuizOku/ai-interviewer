@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { toast } from "react-hot-toast";
 
 interface ResponseData {
   type: string;
@@ -88,7 +89,6 @@ export function useWebRTC(
           setConnectionState(state);
 
           if (state === "failed" || state === "disconnected") {
-            console.log("Connection lost, attempting to reconnect...");
             cleanup();
             reconnectTimeoutRef.current = setTimeout(() => {
               if (started && !isInitializedRef.current) {
@@ -147,19 +147,19 @@ export function useWebRTC(
         dc.onmessage = (e) => {
           try {
             const data: ResponseData = JSON.parse(e.data);
-            console.log("Received message:", data);
 
             if (data.type === "response.done") {
-              console.log("Complete response:", data.response);
               messageBufferRef.current = "";
             }
           } catch (error) {
             console.error("Error processing message:", error);
+            toast.error(
+              "We're having trouble getting a response from the AI. Please try speaking again."
+            );
           }
         };
 
         dc.onopen = () => {
-          console.log("Data channel opened");
           dc.send(
             JSON.stringify({
               type: "response.create",
@@ -167,12 +167,13 @@ export function useWebRTC(
           );
         };
 
-        dc.onclose = () => {
-          console.log("Data channel closed");
-        };
+        dc.onclose = () => {};
 
         dc.onerror = (error) => {
           console.error("Data channel error:", error);
+          toast.error(
+            "We lost connection with the AI. Please try refreshing the page."
+          );
         };
 
         const offer = await pc.createOffer();
@@ -193,6 +194,9 @@ export function useWebRTC(
         await pc.setRemoteDescription({ type: "answer", sdp });
       } catch (error) {
         console.error("Error initializing WebRTC:", error);
+        toast.error(
+          "We couldn't start the interview. Please check your microphone permissions and try again."
+        );
         cleanup();
       }
     }

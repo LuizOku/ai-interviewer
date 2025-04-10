@@ -1,7 +1,7 @@
 import { Interview } from "@/models/interview";
 import { Button } from "@/components/Button";
 import { AudioPlayer } from "./AudioPlayer";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "@/utils/date";
 
 interface InterviewCardProps {
   interview: Interview;
