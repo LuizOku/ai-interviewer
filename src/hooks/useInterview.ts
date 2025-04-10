@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from "react";
-import { Interview } from "@/models/interview";
 
 export function useInterview() {
   const [started, setStarted] = useState(false);
@@ -28,21 +27,23 @@ export function useInterview() {
 
       setIsSaving(true);
       try {
-        // Create interview object
-        const interview: Interview = {
-          id: crypto.randomUUID(),
-          date: new Date().toISOString(),
-          audioUrl,
-        };
+        // Fetch the audio file from the URL
+        const response = await fetch(audioUrl);
+        const blob = await response.blob();
 
-        // Save interview
-        await fetch("/api/interviews", {
+        // Create FormData to send the audio file
+        const formData = new FormData();
+        formData.append("audio", blob, "interview.mp3");
+
+        // Save interview with audio file
+        const saveResponse = await fetch("/api/interviews", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(interview),
+          body: formData,
         });
+
+        if (!saveResponse.ok) {
+          throw new Error("Failed to save interview");
+        }
 
         // Call the onSaved callback if provided
         onSaved?.();

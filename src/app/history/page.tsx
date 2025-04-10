@@ -14,10 +14,11 @@ export default function HistoryPage() {
     const fetchInterviews = async () => {
       try {
         const response = await fetch("/api/interviews");
+        if (!response.ok) throw new Error("Failed to fetch interviews");
         const data = await response.json();
         setInterviews(data);
       } catch (error) {
-        console.error("Failed to fetch interviews:", error);
+        console.error("Error fetching interviews:", error);
       }
     };
 
@@ -26,14 +27,11 @@ export default function HistoryPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await fetch("/api/interviews", {
+      const response = await fetch(`/api/interviews/${id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
       });
-      setInterviews(interviews.filter((interview) => interview.id !== id));
+      if (!response.ok) throw new Error("Failed to delete interview");
+      setInterviews(interviews.filter((interview) => interview._id !== id));
     } catch (error) {
       console.error("Failed to delete interview:", error);
     }
@@ -62,7 +60,7 @@ export default function HistoryPage() {
           <div className="grid gap-6">
             {interviews.map((interview) => (
               <InterviewCard
-                key={interview.id}
+                key={interview._id}
                 interview={interview}
                 onDelete={handleDelete}
               />
