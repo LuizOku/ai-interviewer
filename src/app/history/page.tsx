@@ -5,20 +5,27 @@ import { Interview } from "@/models/interview";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
 import { InterviewCard } from "@/components/InterviewCard";
+import toast from "react-hot-toast";
 
 export default function HistoryPage() {
   const [interviews, setInterviews] = useState<Interview[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const fetchInterviews = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch("/api/interviews");
         if (!response.ok) throw new Error("Failed to fetch interviews");
         const data = await response.json();
         setInterviews(data);
       } catch (error) {
         console.error("Error fetching interviews:", error);
+        toast.error("Failed to load interviews");
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -27,13 +34,18 @@ export default function HistoryPage() {
 
   const handleDelete = async (id: string) => {
     try {
+      setIsDeleting(true);
       const response = await fetch(`/api/interviews/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete interview");
       setInterviews(interviews.filter((interview) => interview._id !== id));
+      toast.success("Interview deleted successfully");
     } catch (error) {
       console.error("Failed to delete interview:", error);
+      toast.error("Failed to delete interview");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -57,21 +69,28 @@ export default function HistoryPage() {
             Interview History
           </h1>
 
-          <div className="grid gap-6">
-            {interviews.map((interview) => (
-              <InterviewCard
-                key={interview._id}
-                interview={interview}
-                onDelete={handleDelete}
-              />
-            ))}
+          {isLoading ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+            </div>
+          ) : (
+            <div className="grid gap-6">
+              {interviews.map((interview) => (
+                <InterviewCard
+                  key={interview._id}
+                  interview={interview}
+                  onDelete={handleDelete}
+                  isDeleting={isDeleting}
+                />
+              ))}
 
-            {interviews.length === 0 && (
-              <div className="text-center text-gray-400 py-12">
-                No interviews found. Complete an interview to see it here.
-              </div>
-            )}
-          </div>
+              {interviews.length === 0 && (
+                <div className="text-center text-gray-400 py-12">
+                  No interviews found. Complete an interview to see it here.
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

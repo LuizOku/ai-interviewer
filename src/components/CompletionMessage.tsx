@@ -44,7 +44,13 @@ export function CompletionMessage({
               className="col-span-2"
               disabled={!audioUrl || isSaving}
             >
-              {isSaving ? "Saving..." : "Save Interview"}
+              {isSaving ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                </div>
+              ) : (
+                "Save Interview"
+              )}
             </Button>
             <Button onClick={onRestart} variant="secondary">
               Retry

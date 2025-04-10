@@ -25,6 +25,7 @@ export function useWebRTC(
   const isInitializedRef = useRef(false);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const messageBufferRef = useRef<string>("");
+  const userStreamRef = useRef<MediaStream | null>(null);
 
   // Track connection state
   const [connectionState, setConnectionState] =
@@ -55,6 +56,13 @@ export function useWebRTC(
       if (dataChannelRef.current) {
         dataChannelRef.current.close();
         dataChannelRef.current = null;
+      }
+
+      if (userStreamRef.current) {
+        userStreamRef.current.getTracks().forEach((track) => {
+          track.stop();
+        });
+        userStreamRef.current = null;
       }
 
       isInitializedRef.current = false;
@@ -98,6 +106,7 @@ export function useWebRTC(
         const userStream = await navigator.mediaDevices.getUserMedia({
           audio: true,
         });
+        userStreamRef.current = userStream;
 
         const userSource = audioContext.createMediaStreamSource(userStream);
         userSource.connect(destination);

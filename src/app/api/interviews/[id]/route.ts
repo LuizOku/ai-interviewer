@@ -6,7 +6,7 @@ import { ObjectId } from "mongodb";
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
   try {
     const url = new URL(request.url);
-    const id = url.pathname.split("/").pop(); // extrai o ID da URL
+    const id = url.pathname.split("/").pop();
 
     if (!id) {
       return NextResponse.json(
